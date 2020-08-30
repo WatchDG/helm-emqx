@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{ .Values.application }}
+  namespace: {{ .Values.namespace }}
+spec:
+  selector:
+    matchLabels:
+      app: {{ .Values.application }}
+  serviceName: {{ .Values.application }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.application }}
+    spec:
+      containers:
+        - name: {{ .Values.application }}
+          image: {{ .Values.image }}
+          envFrom:
+            - secretRef:
+                name: {{ .Values.application }}
+          ports:
+            - name: mqtt
+              containerPort: 1883
+            - name: ws
+              containerPort: 8083
